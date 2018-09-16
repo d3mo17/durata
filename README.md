@@ -3,7 +3,6 @@
 A class to move a initial float value to a target value during a defined time period.
 
 ### Features / Structure / Interface
-* Test driven with karma
 * AMD-, CommonJS and global-support 
 
 ### Installation
@@ -15,6 +14,8 @@ A class to move a initial float value to a target value during a defined time pe
 ### Examples
 
 ##### Simple Demonstration
+
+Demonstrates the progress of a passed float-value.
 
 ```html
 <div id="output"></div>
