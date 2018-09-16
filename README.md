@@ -122,8 +122,9 @@ For best the function should return a value in this range (0.0 to 1.0).
 <script src="node_modules/requirejs/require.js"></script>
 
 <script>
-    var spot = document.getElementById('spot');
+    require.config({baseUrl: 'node_modules'});
 
+    var spot = document.getElementById('spot');
     function updateSpot(xPos, yPos, r, g, b) {
         spot.style.left = xPos.get() + 'px';
         spot.style.top = yPos.get() + 'px';
