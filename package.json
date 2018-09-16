@@ -16,7 +16,7 @@
     "test": "test"
   },
   "main": "./src/Durata.js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "devDependencies": {
     "gulp": "^3.9.1",
     "requirejs": "^2.3.6",
