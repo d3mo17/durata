@@ -58,18 +58,18 @@ Moving a maroon colored div from a upper left position to a lower right position
         yPos = Durata.create(25, 445, 1200);
 
     function updateSpot(xPos, yPos) {
-        spot.style.left = xPos.get() + 'px';
-        spot.style.top = yPos.get() + 'px';
+        this.style.left = xPos.get() + 'px';
+        this.style.top = yPos.get() + 'px';
         if (!xPos.isComplete() || !yPos.isComplete()) {
-            requestAnimationFrame(updateSpot.bind(null, xPos, yPos));
+            requestAnimationFrame(updateSpot.bind(this, xPos, yPos));
         }
     }
 
-    requestAnimationFrame(updateSpot.bind(null, xPos, yPos));
+    requestAnimationFrame(updateSpot.bind(spot, xPos, yPos));
 </script>
 ```
 
-##### Use durata with AMD
+##### Use durata with AMD and group values to move by array
 
 Morphing color maroon to marine blue in 2 seconds
 
@@ -88,19 +88,19 @@ Morphing color maroon to marine blue in 2 seconds
     require.config({baseUrl: 'node_modules'});
 
     var spot = document.getElementById('spot');
-    function updateSpotColor(r, g, b) {
-        spot.style.backgroundColor
-            = 'rgb(' + r.get() + ',' + g.get() + ',' + b.get() + ')';
-        if (!r.isComplete() || !g.isComplete() || !b.isComplete()) {
-            requestAnimationFrame(updateSpotColor.bind(null, r, g, b));
+    function updateSpotColor(colorTween) {
+        this.style.backgroundColor = [
+					'rgb(' + colorTween.get()[0], colorTween.get()[1], colorTween.get()[2] + ')'
+				].join(',');
+
+        if (!colorTween.isComplete()) {
+            requestAnimationFrame(updateSpotColor.bind(this, colorTween));
         }
     }
 
     require(['durata/dist/durata.min'], function(Durata) {
-        var r = Durata.create(128, 42, 2000);
-        var g = Durata.create(0, 107, 2000);
-        var b = Durata.create(0, 204, 2000);
-        requestAnimationFrame(updateSpotColor.bind(null, r, g, b));
+        var colorTween = Durata.create([128, 0, 0], [42, 107, 204], 2000);
+        requestAnimationFrame(updateSpotColor.bind(spot, colorTween));
     });
 </script>
 ```
@@ -126,14 +126,14 @@ For best the function should return a value in this range (0.0 to 1.0).
 
     var spot = document.getElementById('spot');
     function updateSpot(xPos, yPos, r, g, b) {
-        spot.style.left = xPos.get() + 'px';
-        spot.style.top = yPos.get() + 'px';
-        spot.style.backgroundColor
+        this.style.left = xPos.get() + 'px';
+        this.style.top = yPos.get() + 'px';
+        this.style.backgroundColor
             = 'rgb(' + r.get() + ',' + g.get() + ',' + b.get() + ')';
         if (!xPos.isComplete() || !yPos.isComplete()
             || !r.isComplete() || !g.isComplete() || !b.isComplete()
         ) {
-            requestAnimationFrame(updateSpot.bind(null, xPos, yPos, r, g, b));
+            requestAnimationFrame(updateSpot.bind(this, xPos, yPos, r, g, b));
         }
     }
 
@@ -145,7 +145,7 @@ For best the function should return a value in this range (0.0 to 1.0).
         var g = Durata.create(107, 215, 1200);
         var b = Durata.create(204, 0, 1500);
 
-        requestAnimationFrame(updateSpot.bind(null, xPos, yPos, r, g, b));
+        requestAnimationFrame(updateSpot.bind(spot, xPos, yPos, r, g, b));
     });
 </script>
 ```
