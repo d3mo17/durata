@@ -46,9 +46,9 @@ Moving a maroon colored div from a upper left position to a lower right position
      style="position: absolute;
             width: 100px;
             height: 100px;
-            top:30px;
+            top: 30px;
             left: 45px;
-            background-color:maroon">&nbsp;</div>
+            background-color: maroon">&nbsp;</div>
 
 <script src="node_modules/durata/dist/durata.min.js"></script>
 
@@ -78,9 +78,9 @@ Morphing color maroon to marine blue in 2 seconds
      style="position: absolute;
             width: 100px;
             height: 100px;
-            top:30px;
+            top: 30px;
             left: 45px;
-            background-color:maroon">&nbsp;</div>
+            background-color: maroon">&nbsp;</div>
 
 <script src="node_modules/requirejs/require.js"></script>
 
@@ -105,6 +105,52 @@ Morphing color maroon to marine blue in 2 seconds
 </script>
 ```
 
+##### Grab progress on update
+
+```html
+<div id="border"
+     style="position: absolute;
+		        z-index: 5;
+            width: 500px;
+            height: 30px;
+            top: 30px;
+            left: 45px;
+						border: 1px solid black;
+						text-align: center;
+						padding-top: 3px;
+            background: none">0%</div>
+<div id="bar"
+     style="position: absolute;
+		        z-index: 2;
+            width: 0;
+            height: 30px;
+            top: 31px;
+            left: 46px;
+            background-color: blue">&nbsp;</div>
+
+<script src="node_modules/requirejs/require.js"></script>
+
+<script>
+    require.config({baseUrl: 'node_modules'});
+
+		var bar = document.getElementById('bar'),
+		    border = document.getElementById('border');
+    function updateBarWidth(tween) {
+				this.style.width = tween.get() + 'px';
+				border.innerHTML = Math.round(tween.getProgress()*100) + '%';
+
+        if (!tween.isComplete()) {
+            requestAnimationFrame(updateBarWidth.bind(this, tween));
+        }
+    }
+
+    require(['durata/dist/durata.min'], function(Durata) {
+        var tween = Durata.create(0, 500, 7000);
+        requestAnimationFrame(updateBarWidth.bind(bar, tween));
+    });
+</script>
+```
+
 ##### Use durata with easing
 
 The easing-function takes a value between 0.0 and 1.0.
@@ -115,9 +161,9 @@ For best the function should return a value in this range (0.0 to 1.0).
      style="position: absolute;
             width: 100px;
             height: 100px;
-            top:30px;
+            top: 30px;
             left: 45px;
-            background-color:rgb(42,107,204)">&nbsp;</div>
+            background-color: rgb(42,107,204)">&nbsp;</div>
 
 <script src="node_modules/requirejs/require.js"></script>
 
