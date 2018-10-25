@@ -90,8 +90,8 @@ Morphing color maroon to marine blue in 2 seconds
     var spot = document.getElementById('spot');
     function updateSpotColor(colorTween) {
         this.style.backgroundColor = [
-					'rgb(' + colorTween.get()[0], colorTween.get()[1], colorTween.get()[2] + ')'
-				].join(',');
+          'rgb(' + colorTween.get()[0], colorTween.get()[1], colorTween.get()[2] + ')'
+        ].join(',');
 
         if (!colorTween.isComplete()) {
             requestAnimationFrame(updateSpotColor.bind(this, colorTween));
@@ -110,18 +110,17 @@ Morphing color maroon to marine blue in 2 seconds
 ```html
 <div id="border"
      style="position: absolute;
-		        z-index: 5;
+            z-index: 5;
             width: 500px;
             height: 30px;
             top: 30px;
             left: 45px;
-						border: 1px solid black;
-						text-align: center;
-						padding-top: 3px;
+            border: 1px solid black;
+            text-align: center;
             background: none">0%</div>
 <div id="bar"
      style="position: absolute;
-		        z-index: 2;
+            z-index: 2;
             width: 0;
             height: 30px;
             top: 31px;
@@ -133,11 +132,11 @@ Morphing color maroon to marine blue in 2 seconds
 <script>
     require.config({baseUrl: 'node_modules'});
 
-		var bar = document.getElementById('bar'),
-		    border = document.getElementById('border');
+    var bar = document.getElementById('bar'),
+        border = document.getElementById('border');
     function updateBarWidth(tween) {
-				this.style.width = tween.get() + 'px';
-				border.innerHTML = Math.round(tween.getProgress()*100) + '%';
+        this.style.width = tween.get() + 'px';
+        border.innerHTML = Math.round(tween.getProgress()*100) + '%';
 
         if (!tween.isComplete()) {
             requestAnimationFrame(updateBarWidth.bind(this, tween));
