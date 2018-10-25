@@ -79,18 +79,14 @@
 	}
 
 	/**
-	 * Returns the quotient of the current progress between start and target time
+	 * Returns the progress quotient between 0.0 and 1.0.
 	 * 
 	 * @returns {Float}
 	 */
-	function getEasedProgressValue() {
+	function getProgress() {
 		var progress = (+(new Date) - this[' startTime']) / this[' duration'];
 
-		if (1 < progress) {
-			progress = 1;
-		}
-
-		return this[' easing'](progress);
+		return 1 < progress ? 1 : progress;
 	}
 
 	/**
@@ -99,7 +95,7 @@
 	 * @returns {Float}
 	 */
 	DurataSingleValue.prototype.get = function () {
-		return this[' startValue'] + this[' diffValue'] * getEasedProgressValue.call(this);
+		return this[' startValue'] + this[' diffValue'] * this[' easing'](getProgress.call(this));
 	};
 
 	/**
@@ -108,12 +104,18 @@
 	 * @returns {Array}
 	 */
 	DurataMultipleValue.prototype.get = function () {
-		var progessFactor = getEasedProgressValue.call(this);
-
 		return this[' startValues'].map(function (startValue, index) {
-			return startValue + this[' diffValues'][index] * progessFactor;
+			return startValue + this[' diffValues'][index] * this[' easing'](getProgress.call(this));
 		}, this);
 	};
+
+	/**
+	 * Returns the progress quotient between 0.0 and 1.0.
+	 * 
+	 * @returns {Float}
+	 */
+	DurataSingleValue.prototype.getProgress = 
+	DurataMultipleValue.prototype.getProgress = getProgress;
 
 	/**
 	 * Returns whether the animation is complete.
