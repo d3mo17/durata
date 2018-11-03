@@ -15,7 +15,9 @@
 		root.Durata = factory();
 	}
 }(this, function () {
-	"use strict";
+  "use strict";
+  
+  var eventTypes = ['update', 'complete'];
 
 	/**
 	 * @private
@@ -30,7 +32,8 @@
 				return input;
 			};
 		this[' duration'] = parseInt(duration) || 1000;
-		this[' startTime'] = +(new Date);
+    this[' startTime'] = +(new Date);
+    this[' listener'] = {complete: []};
 	}
 
 	/**
@@ -115,7 +118,51 @@
 	 * @returns {Float}
 	 */
 	DurataSingleValue.prototype.getProgress = 
-	DurataMultipleValue.prototype.getProgress = getProgress;
+  DurataMultipleValue.prototype.getProgress = getProgress;
+  
+  /**
+   * Notifies all listeners of passed event-type.
+   * 
+   * @param {String} type 
+   */
+  function dispatch(type) {
+    this[' listener'][type].forEach(function (listener) {
+      listener.call(this);
+    }, this);
+  }
+
+  /**
+   * Registers an event listener of a passed type.
+   * Return true in an update-callback, if you want to interrupt the the update-cycle
+   * for this callback.
+   * 
+	 * @returns {Durata}
+   */
+	DurataSingleValue.prototype.on = 
+  DurataMultipleValue.prototype.on = function (type, callback) {
+    if (eventTypes.indexOf(type) === -1) {
+      throw new RangeError(
+        'Only following values are allowed for event type: ' + eventTypes.join(', ') + '!'
+      );
+    }
+
+    if (type === 'update') {
+      requestAnimationFrame((function update() {
+        callback.call(this) || this.isComplete() || requestAnimationFrame(update.bind(this));
+      }).bind(this));
+    } else {
+      if (type === 'complete' && !this[' listener'][type].length) {
+        requestAnimationFrame((function completeWatch() {
+          this.isComplete()
+            ? dispatch.call(this, 'complete')
+            : requestAnimationFrame(completeWatch.bind(this));
+        }).bind(this));
+      }
+      this[' listener'][type].push(callback);
+    }
+
+    return this;
+  };
 
 	/**
 	 * Returns whether the animation is complete.

@@ -71,7 +71,8 @@ Moving a maroon colored div from a upper left position to a lower right position
 
 ##### Use durata with AMD and group values to move by array
 
-Morphing color maroon to marine blue in 2 seconds
+Morphing color maroon to marine blue in 2 seconds and alert a text when complete.
+The morphing is done by registering an event listener, that will be called when an update of animation frame arises.
 
 ```html
 <div id="spot"
@@ -88,19 +89,17 @@ Morphing color maroon to marine blue in 2 seconds
     require.config({baseUrl: 'node_modules'});
 
     var spot = document.getElementById('spot');
-    function updateSpotColor(colorTween) {
-        this.style.backgroundColor = [
-          'rgb(' + colorTween.get()[0], colorTween.get()[1], colorTween.get()[2] + ')'
+    function updateSpotColor() {
+        spot.style.backgroundColor = [
+          'rgb(' + this.get()[0], this.get()[1], this.get()[2] + ')'
         ].join(',');
-
-        if (!colorTween.isComplete()) {
-            requestAnimationFrame(updateSpotColor.bind(this, colorTween));
-        }
     }
 
     require(['durata/dist/durata.min'], function(Durata) {
-        var colorTween = Durata.create([128, 0, 0], [42, 107, 204], 2000);
-        requestAnimationFrame(updateSpotColor.bind(spot, colorTween));
+        Durata
+          .create([128, 0, 0], [42, 107, 204], 2000)
+          .on('update', updateSpotColor)
+          .on('complete', function () { alert('Color morphing complete'); });
     });
 </script>
 ```
