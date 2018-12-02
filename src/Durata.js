@@ -7,127 +7,162 @@
  * @returns {Object}
  */
 (function (root, factory) {
-	if (typeof define === 'function' && define.amd) {
-		define(factory);
-	} else if (typeof module === 'object' && module.exports) {
-		module.exports = factory();
-	} else {
-		root.Durata = factory();
-	}
+  if (typeof define === 'function' && define.amd) {
+    define(factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory();
+  } else {
+    root.Durata = factory();
+  }
 }(this, function () {
   "use strict";
-  
-  var eventTypes = ['update', 'complete'];
 
-	/**
-	 * @private
-	 * 
-	 * @param {Int}      duration
-	 * @param {Function} easing
-	 */
-	function Durata(duration, easing) {
-		this[' easing'] = typeof easing === 'function'
-			? easing
-			: function linearEasing(input) {
-				return input;
-			};
-		this[' duration'] = parseInt(duration) || 1000;
+  var eventTypes = ['update', 'complete', 'pause', 'resume'];
+
+  /**
+   * @private
+   * 
+   * @param {Int}      duration
+   * @param {Function} easing
+   */
+  function Durata(duration, easing) {
+    this[' easing'] = typeof easing === 'function'
+      ? easing
+      : function linearEasing(input) {
+        return input;
+      };
+    this[' duration'] = parseInt(duration) || 1000;
+    this[' downTime'] = null;
     this[' startTime'] = +(new Date);
-    this[' listener'] = {complete: []};
-	}
+    this[' listener'] = {complete: [], pause: [], resume: []};
+  }
 
-	/**
-	 * @constructor
-	 * 
-	 * @param {Float}    startValue
-	 * @param {Float}    targetValue
-	 * @param {Int}      duration
-	 * @param {Function} easing
-	 */
-	function DurataSingleValue(startValue, targetValue, duration, easing) {
-		this[' startValue'] = parseFloat(startValue);
-		this[' targetValue'] = parseFloat(targetValue);
-		this[' diffValue'] = this[' targetValue'] - this[' startValue'];
-		
-		Durata.call(this, duration, easing);
-	}
+  /**
+   * @constructor
+   * 
+   * @param {Float}    startValue
+   * @param {Float}    targetValue
+   * @param {Int}      duration
+   * @param {Function} easing
+   */
+  function DurataSingleValue(startValue, targetValue, duration, easing) {
+    this[' startValue'] = parseFloat(startValue);
+    this[' targetValue'] = parseFloat(targetValue);
+    this[' diffValue'] = this[' targetValue'] - this[' startValue'];
+  	
+    Durata.call(this, duration, easing);
+  }
 
-	/**
-	 * @constructor
-	 * 
-	 * @param {Array}    startValues
-	 * @param {Array}    targetValues
-	 * @param {Int}      duration
-	 * @param {Function} easing
-	 */
-	function DurataMultipleValue(startValues, targetValues, duration, easing) {
+  /**
+   * @constructor
+   * 
+   * @param {Array}    startValues
+   * @param {Array}    targetValues
+   * @param {Int}      duration
+   * @param {Function} easing
+   */
+  function DurataMultipleValue(startValues, targetValues, duration, easing) {
+    if (startValues.length != targetValues.length) {
+      throw new RangeError(
+        'The start values array has to have the same length as the target values array!'
+      );
+    }
 
-		if (startValues.length != targetValues.length) {
-			throw new RangeError(
-				'The start values array has to have the same length as the target values array!'
-			);
-		}
+    this[' startValues'] = startValues.map(function (startValue) {
+      return parseFloat(startValue);
+    });
+    this[' targetValues'] = targetValues.map(function (startValue) {
+      return parseFloat(startValue);
+    });
+    this[' diffValues'] = this[' startValues'].map(function (startValue, index) {
+      return this[' targetValues'][index] - startValue;
+    }, this);
 
-		this[' startValues'] = startValues.map(function (startValue) {
-			return parseFloat(startValue);
-		});
-		this[' targetValues'] = targetValues.map(function (startValue) {
-			return parseFloat(startValue);
-		});
-		this[' diffValues'] = this[' startValues'].map(function (startValue, index) {
-			return this[' targetValues'][index] - startValue;
-		}, this);
-			
-		Durata.call(this, duration, easing);
-	}
+    Durata.call(this, duration, easing);
+  }
 
-	/**
-	 * Returns the progress quotient between 0.0 and 1.0.
-	 * 
-	 * @returns {Float}
-	 */
-	function getProgress() {
-		var progress = (+(new Date) - this[' startTime']) / this[' duration'];
+  /**
+   * Returns the progress quotient between 0.0 and 1.0.
+   * 
+   * @returns {Float}
+   */
+  function getProgress() {
+    var passedTime = this.isPaused() ? this[' downTime'] : (+(new Date) - this[' startTime']);
+    var progress = passedTime / this[' duration'];
 
-		return 1 < progress ? 1 : progress;
-	}
+    return 1 < progress ? 1 : progress;
+  }
 
-	/**
-	 * Returns the current calculated value
-	 * 
-	 * @returns {Float}
-	 */
-	DurataSingleValue.prototype.get = function () {
-		return this[' startValue'] + this[' diffValue'] * this[' easing'](getProgress.call(this));
-	};
+  /**
+   * Returns the current calculated value
+   * 
+   * @returns {Float}
+   */
+  DurataSingleValue.prototype.get = function () {
+    return this[' startValue'] + this[' diffValue'] * this[' easing'](getProgress.call(this));
+  };
 
-	/**
-	 * Returns the current calculated values
-	 * 
-	 * @returns {Array}
-	 */
-	DurataMultipleValue.prototype.get = function () {
-		return this[' startValues'].map(function (startValue, index) {
-			return startValue + this[' diffValues'][index] * this[' easing'](getProgress.call(this));
-		}, this);
-	};
+  /**
+   * Returns the current calculated values
+   * 
+   * @returns {Array}
+   */
+  DurataMultipleValue.prototype.get = function () {
+    return this[' startValues'].map(function (startValue, index) {
+      return startValue + this[' diffValues'][index] * this[' easing'](getProgress.call(this));
+    }, this);
+  };
 
-	/**
-	 * Returns the progress quotient between 0.0 and 1.0.
-	 * 
-	 * @returns {Float}
-	 */
-	DurataSingleValue.prototype.getProgress = 
+  /**
+   * Returns the progress quotient between 0.0 and 1.0.
+   * 
+   * @returns {Float}
+   */
+  DurataSingleValue.prototype.getProgress = 
   DurataMultipleValue.prototype.getProgress = getProgress;
-  
+
+	/**
+   * Pauses the progress.
+   * 
+   * @param {*} reason 
+   * 
+	 * @returns {this}
+	 */
+	DurataSingleValue.prototype.pause = 
+  DurataMultipleValue.prototype.pause = function (reason) {
+    if (!this.isPaused()) {
+      this[' downTime'] = (+(new Date) - this[' startTime']);
+      dispatch.call(this, 'pause', reason);
+    }
+    return this;
+  };
+
+	/**
+   * Resumes the paused progress.
+   * 
+   * @param {*} reason 
+   * 
+	 * @returns {this}
+	 */
+	DurataSingleValue.prototype.resume = 
+  DurataMultipleValue.prototype.resume = function (reason) {
+    if (this.isPaused()) {
+      this[' startTime'] = (+(new Date) - this[' downTime']);
+      dispatch.call(this, 'resume', reason);
+      this[' downTime'] = null;
+    }
+    return this;
+  };
+
   /**
    * Notifies all listeners of passed event-type.
    * 
    * @param {String} type 
+   * @param {*} data 
    */
-  function dispatch(type) {
+  function dispatch(type, data) {
     this[' listener'][type].forEach(function (listener) {
-      listener.call(this);
+      listener.call(this, data);
     }, this);
   }
 
@@ -136,9 +171,9 @@
    * Return true in an update-callback, if you want to interrupt the the update-cycle
    * for this callback.
    * 
-	 * @returns {Durata}
+   * @returns {Durata}
    */
-	DurataSingleValue.prototype.on = 
+  DurataSingleValue.prototype.on = 
   DurataMultipleValue.prototype.on = function (type, callback) {
     if (eventTypes.indexOf(type) === -1) {
       throw new RangeError(
@@ -164,34 +199,44 @@
     return this;
   };
 
-	/**
-	 * Returns whether the animation is complete.
-	 * 
-	 * @returns {Boolean}
-	 */
-	DurataSingleValue.prototype.isComplete = 
-	DurataMultipleValue.prototype.isComplete = function () {
-		return this[' duration'] <= +(new Date) - this[' startTime'];
-	};
+  /**
+   * Returns whether the animation is paused.
+   * 
+   * @returns {Boolean}
+   */
+  DurataSingleValue.prototype.isPaused = 
+  DurataMultipleValue.prototype.isPaused = function () {
+    return this[' downTime'] !== null;
+  };
 
-	// Module-API
-	return {
-		/**
-		 * Creates an object to run initial float value(s) to a target value(s).
-		 * 
-		 * @alias   module:Durata.create
-		 * @returns {Durata}
-		 */
-		create: function (startFloatValue, targetFloatValue, duration, easing) {
-			if (Array.isArray(startFloatValue) && Array.isArray(startFloatValue)) {
-				return new DurataMultipleValue(startFloatValue, targetFloatValue, duration, easing);
-			}
+  /**
+   * Returns whether the animation is complete.
+   * 
+   * @returns {Boolean}
+   */
+  DurataSingleValue.prototype.isComplete = 
+  DurataMultipleValue.prototype.isComplete = function () {
+    return !this.isPaused() && this[' duration'] <= +(new Date) - this[' startTime'];
+  };
 
-			if (Array.isArray(startFloatValue) || Array.isArray(startFloatValue)) {
-				throw new RangeError('Both values - start and target value have to be of the same type!');
-			}
-			
-			return new DurataSingleValue(startFloatValue, targetFloatValue, duration, easing);
-		}
-	};
+  // Module-API
+  return {
+    /**
+     * Creates an object to run initial float value(s) to a target value(s).
+     * 
+     * @alias   module:Durata.create
+     * @returns {Durata}
+     */
+    create: function (startFloatValue, targetFloatValue, duration, easing) {
+      if (Array.isArray(startFloatValue) && Array.isArray(startFloatValue)) {
+        return new DurataMultipleValue(startFloatValue, targetFloatValue, duration, easing);
+      }
+
+      if (Array.isArray(startFloatValue) || Array.isArray(startFloatValue)) {
+        throw new RangeError('Both values - start and target value have to be of the same type!');
+      }
+  		
+      return new DurataSingleValue(startFloatValue, targetFloatValue, duration, easing);
+    }
+  };
 }));
