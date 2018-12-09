@@ -16,12 +16,17 @@
   }
 }(this, function () {
   "use strict";
+  
+  /**
+   * Animating float values.
+   * @module Durata
+   */
 
   var eventTypes = ['update', 'complete', 'pause', 'resume'];
 
   /**
    * @private
-   * 
+   *
    * @param {Int}      duration
    * @param {Function} easing
    */
@@ -39,7 +44,9 @@
 
   /**
    * @constructor
-   * 
+   * @global
+   * @private
+   *
    * @param {Float}    startValue
    * @param {Float}    targetValue
    * @param {Int}      duration
@@ -49,15 +56,17 @@
     this[' startValue'] = parseFloat(startValue);
     this[' targetValue'] = parseFloat(targetValue);
     this[' diffValue'] = this[' targetValue'] - this[' startValue'];
-  	
+
     Durata.call(this, duration, easing);
   }
 
   /**
    * @constructor
-   * 
-   * @param {Array}    startValues
-   * @param {Array}    targetValues
+   * @global
+   * @private
+   *
+   * @param {Float[]}  startValues
+   * @param {Float[]}  targetValues
    * @param {Int}      duration
    * @param {Function} easing
    */
@@ -83,7 +92,7 @@
 
   /**
    * Returns the progress quotient between 0.0 and 1.0.
-   * 
+   *
    * @returns {Float}
    */
   function getProgress() {
@@ -95,7 +104,7 @@
 
   /**
    * Returns the current calculated value
-   * 
+   * @method DurataSingleValue#get
    * @returns {Float}
    */
   DurataSingleValue.prototype.get = function () {
@@ -104,7 +113,7 @@
 
   /**
    * Returns the current calculated values
-   * 
+   * @method DurataMultipleValue#get
    * @returns {Array}
    */
   DurataMultipleValue.prototype.get = function () {
@@ -115,20 +124,34 @@
 
   /**
    * Returns the progress quotient between 0.0 and 1.0.
-   * 
+   *
+   * @method DurataSingleValue#getProgress
    * @returns {Float}
    */
-  DurataSingleValue.prototype.getProgress = 
+  DurataSingleValue.prototype.getProgress =
+  /**
+   * Returns the progress quotient between 0.0 and 1.0.
+   *
+   * @method DurataMultipleValue#getProgress
+   * @returns {Float}
+   */
   DurataMultipleValue.prototype.getProgress = getProgress;
 
-	/**
+  /**
    * Pauses the progress.
-   * 
-   * @param {*} reason 
-   * 
-	 * @returns {this}
-	 */
-	DurataSingleValue.prototype.pause = 
+   *
+   * @method DurataSingleValue#pause
+   * @param {*} reason
+   * @returns {this}
+   */
+  DurataSingleValue.prototype.pause =
+  /**
+   * Pauses the progress.
+   *
+   * @method DurataMultipleValue#pause
+   * @param {*} reason
+   * @returns {this}
+   */
   DurataMultipleValue.prototype.pause = function (reason) {
     if (!this.isPaused()) {
       this[' downTime'] = (+(new Date) - this[' startTime']);
@@ -137,14 +160,21 @@
     return this;
   };
 
-	/**
+  /**
    * Resumes the paused progress.
-   * 
-   * @param {*} reason 
-   * 
-	 * @returns {this}
-	 */
-	DurataSingleValue.prototype.resume = 
+   *
+   * @method DurataSingleValue#resume
+   * @param {*} reason
+   * @returns {this}
+   */
+  DurataSingleValue.prototype.resume =
+  /**
+   * Resumes the paused progress.
+   *
+   * @method DurataMultipleValue#resume
+   * @param {*} reason
+   * @returns {this}
+   */
   DurataMultipleValue.prototype.resume = function (reason) {
     if (this.isPaused()) {
       this[' startTime'] = (+(new Date) - this[' downTime']);
@@ -156,9 +186,10 @@
 
   /**
    * Notifies all listeners of passed event-type.
-   * 
-   * @param {String} type 
-   * @param {*} data 
+   *
+   * @private
+   * @param {String} type
+   * @param {*} data
    */
   function dispatch(type, data) {
     this[' listener'][type].forEach(function (listener) {
@@ -170,10 +201,19 @@
    * Registers an event listener of a passed type.
    * Return true in an update-callback, if you want to interrupt the the update-cycle
    * for this callback.
-   * 
-   * @returns {Durata}
+   *
+   * @method DurataSingleValue#on
+   * @returns {this}
    */
-  DurataSingleValue.prototype.on = 
+  DurataSingleValue.prototype.on =
+  /**
+   * Registers an event listener of a passed type.
+   * Return true in an update-callback, if you want to interrupt the the update-cycle
+   * for this callback.
+   *
+   * @method DurataMultipleValue#on
+   * @returns {this}
+   */
   DurataMultipleValue.prototype.on = function (type, callback) {
     if (eventTypes.indexOf(type) === -1) {
       throw new RangeError(
@@ -201,20 +241,34 @@
 
   /**
    * Returns whether the animation is paused.
-   * 
+   *
+   * @method DurataSingleValue#isPaused
    * @returns {Boolean}
    */
-  DurataSingleValue.prototype.isPaused = 
+  DurataSingleValue.prototype.isPaused =
+  /**
+   * Returns whether the animation is paused.
+   *
+   * @method DurataMultipleValue#isPaused
+   * @returns {Boolean}
+   */
   DurataMultipleValue.prototype.isPaused = function () {
     return this[' downTime'] !== null;
   };
 
   /**
    * Returns whether the animation is complete.
-   * 
+   *
+   * @method DurataSingleValue#isComplete
    * @returns {Boolean}
    */
-  DurataSingleValue.prototype.isComplete = 
+  DurataSingleValue.prototype.isComplete =
+  /**
+   * Returns whether the animation is complete.
+   *
+   * @method DurataMultipleValue#isComplete
+   * @returns {Boolean}
+   */
   DurataMultipleValue.prototype.isComplete = function () {
     return !this.isPaused() && this[' duration'] <= +(new Date) - this[' startTime'];
   };
@@ -222,10 +276,15 @@
   // Module-API
   return {
     /**
-     * Creates an object to run initial float value(s) to a target value(s).
-     * 
+     * Creates an object to run initial float value(s) to target value(s).
+     *
      * @alias   module:Durata.create
-     * @returns {Durata}
+     * @param   {Float|Float[]} startFloatValue
+     * @param   {Float|Float[]} targetFloatValue
+     * @param   {Int} duration
+     * @param   {Function} easing
+     * @returns {DurataSingleValue|DurataMultipleValue}
+     * @throws  {RangeError}
      */
     create: function (startFloatValue, targetFloatValue, duration, easing) {
       if (Array.isArray(startFloatValue) && Array.isArray(startFloatValue)) {
@@ -235,7 +294,7 @@
       if (Array.isArray(startFloatValue) || Array.isArray(startFloatValue)) {
         throw new RangeError('Both values - start and target value have to be of the same type!');
       }
-  		
+
       return new DurataSingleValue(startFloatValue, targetFloatValue, duration, easing);
     }
   };

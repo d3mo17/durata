@@ -3,13 +3,16 @@
 A class to move a initial float value to a target value during a defined time period.
 
 ### Features / Structure / Interface
-* AMD-, CommonJS and global-support 
+* AMD-, CommonJS and global-support
 
 ### Installation
 
 ```shell
     $ npm install durata
 ```
+
+### API documentation
+[API of Durata](api.md)
 
 ### Examples
 
