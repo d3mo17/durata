@@ -141,7 +141,7 @@
    * Pauses the progress.
    *
    * @method DurataSingleValue#pause
-   * @param {*} reason
+   * @param {*} reason Data that should be passed to the pause-listener
    * @returns {this}
    */
   DurataSingleValue.prototype.pause =
@@ -149,7 +149,7 @@
    * Pauses the progress.
    *
    * @method DurataMultipleValue#pause
-   * @param {*} reason
+   * @param {*} reason Data that should be passed to the pause-listener
    * @returns {this}
    */
   DurataMultipleValue.prototype.pause = function (reason) {
@@ -164,7 +164,7 @@
    * Resumes the paused progress.
    *
    * @method DurataSingleValue#resume
-   * @param {*} reason
+   * @param {*} reason Data that should be passed to the resume-listener
    * @returns {this}
    */
   DurataSingleValue.prototype.resume =
@@ -172,7 +172,7 @@
    * Resumes the paused progress.
    *
    * @method DurataMultipleValue#resume
-   * @param {*} reason
+   * @param {*} reason Data that should be passed to the resume-listener
    * @returns {this}
    */
   DurataMultipleValue.prototype.resume = function (reason) {
@@ -198,10 +198,29 @@
   }
 
   /**
+   * Will be fired on each `requestAnimationFrame` until the animation `isComplete`
+   * @event update
+   */
+  /**
+   * Will be fired when the animation `isComplete`
+   * @event complete
+   */
+  /**
+   * Will be fired when the animation `isPaused`
+   * @event pause
+   */
+  /**
+   * Will be fired when the animation continues after pause
+   * @event resume
+   */
+
+  /**
    * Registers an event listener of a passed type.
    * Return true in an update-callback, if you want to interrupt the the update-cycle
    * for this callback.
    *
+   * @param {String} type Name of the event to listen to
+   * @param {Function} callback Action that should be performed on event
    * @method DurataSingleValue#on
    * @returns {this}
    */
@@ -211,6 +230,8 @@
    * Return true in an update-callback, if you want to interrupt the the update-cycle
    * for this callback.
    *
+   * @param {String} type Name of the event to listen to
+   * @param {Function} callback Action that should be performed on event
    * @method DurataMultipleValue#on
    * @returns {this}
    */

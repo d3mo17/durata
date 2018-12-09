@@ -21,6 +21,16 @@
 Animating float values.
 
 
+* [Durata](#module_Durata)
+    * _static_
+        * [.create(startFloatValue, targetFloatValue, duration, easing)](#module_Durata.create) ⇒ [<code>DurataSingleValue</code>](#DurataSingleValue) \| [<code>DurataMultipleValue</code>](#DurataMultipleValue)
+    * _inner_
+        * ["update"](#event_update)
+        * ["complete"](#event_complete)
+        * ["pause"](#event_pause)
+        * ["resume"](#event_resume)
+
+
 * * *
 
 <a name="module_Durata.create"></a>
@@ -44,6 +54,42 @@ Creates an object to run initial float value(s) to target value(s).
 
 * * *
 
+<a name="event_update"></a>
+
+### "update"
+Will be fired on each `requestAnimationFrame` until the animation `isComplete`
+
+**Kind**: event emitted by [<code>Durata</code>](#module_Durata)  
+
+* * *
+
+<a name="event_complete"></a>
+
+### "complete"
+Will be fired when the animation `isComplete`
+
+**Kind**: event emitted by [<code>Durata</code>](#module_Durata)  
+
+* * *
+
+<a name="event_pause"></a>
+
+### "pause"
+Will be fired when the animation `isPaused`
+
+**Kind**: event emitted by [<code>Durata</code>](#module_Durata)  
+
+* * *
+
+<a name="event_resume"></a>
+
+### "resume"
+Will be fired when the animation continues after pause
+
+**Kind**: event emitted by [<code>Durata</code>](#module_Durata)  
+
+* * *
+
 <a name="DurataSingleValue"></a>
 
 ## DurataSingleValue ℗
@@ -56,7 +102,7 @@ Creates an object to run initial float value(s) to target value(s).
     * [.getProgress()](#DurataSingleValue+getProgress) ⇒ <code>Float</code>
     * [.pause(reason)](#DurataSingleValue+pause) ⇒ <code>this</code>
     * [.resume(reason)](#DurataSingleValue+resume) ⇒ <code>this</code>
-    * [.on()](#DurataSingleValue+on) ⇒ <code>this</code>
+    * [.on(type, callback)](#DurataSingleValue+on) ⇒ <code>this</code>
     * [.isPaused()](#DurataSingleValue+isPaused) ⇒ <code>Boolean</code>
     * [.isComplete()](#DurataSingleValue+isComplete) ⇒ <code>Boolean</code>
 
@@ -102,9 +148,9 @@ Pauses the progress.
 
 **Kind**: instance method of [<code>DurataSingleValue</code>](#DurataSingleValue)  
 
-| Param | Type |
-| --- | --- |
-| reason | <code>\*</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| reason | <code>\*</code> | Data that should be passed to the pause-listener |
 
 
 * * *
@@ -116,21 +162,27 @@ Resumes the paused progress.
 
 **Kind**: instance method of [<code>DurataSingleValue</code>](#DurataSingleValue)  
 
-| Param | Type |
-| --- | --- |
-| reason | <code>\*</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| reason | <code>\*</code> | Data that should be passed to the resume-listener |
 
 
 * * *
 
 <a name="DurataSingleValue+on"></a>
 
-### durataSingleValue.on() ⇒ <code>this</code>
+### durataSingleValue.on(type, callback) ⇒ <code>this</code>
 Registers an event listener of a passed type.
 Return true in an update-callback, if you want to interrupt the the update-cycle
 for this callback.
 
 **Kind**: instance method of [<code>DurataSingleValue</code>](#DurataSingleValue)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| type | <code>String</code> | Name of the event to listen to |
+| callback | <code>function</code> | Action that should be performed on event |
+
 
 * * *
 
@@ -164,7 +216,7 @@ Returns whether the animation is complete.
     * [.getProgress()](#DurataMultipleValue+getProgress) ⇒ <code>Float</code>
     * [.pause(reason)](#DurataMultipleValue+pause) ⇒ <code>this</code>
     * [.resume(reason)](#DurataMultipleValue+resume) ⇒ <code>this</code>
-    * [.on()](#DurataMultipleValue+on) ⇒ <code>this</code>
+    * [.on(type, callback)](#DurataMultipleValue+on) ⇒ <code>this</code>
     * [.isPaused()](#DurataMultipleValue+isPaused) ⇒ <code>Boolean</code>
     * [.isComplete()](#DurataMultipleValue+isComplete) ⇒ <code>Boolean</code>
 
@@ -210,9 +262,9 @@ Pauses the progress.
 
 **Kind**: instance method of [<code>DurataMultipleValue</code>](#DurataMultipleValue)  
 
-| Param | Type |
-| --- | --- |
-| reason | <code>\*</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| reason | <code>\*</code> | Data that should be passed to the pause-listener |
 
 
 * * *
@@ -224,21 +276,27 @@ Resumes the paused progress.
 
 **Kind**: instance method of [<code>DurataMultipleValue</code>](#DurataMultipleValue)  
 
-| Param | Type |
-| --- | --- |
-| reason | <code>\*</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| reason | <code>\*</code> | Data that should be passed to the resume-listener |
 
 
 * * *
 
 <a name="DurataMultipleValue+on"></a>
 
-### durataMultipleValue.on() ⇒ <code>this</code>
+### durataMultipleValue.on(type, callback) ⇒ <code>this</code>
 Registers an event listener of a passed type.
 Return true in an update-callback, if you want to interrupt the the update-cycle
 for this callback.
 
 **Kind**: instance method of [<code>DurataMultipleValue</code>](#DurataMultipleValue)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| type | <code>String</code> | Name of the event to listen to |
+| callback | <code>function</code> | Action that should be performed on event |
+
 
 * * *
 
