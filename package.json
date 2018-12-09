@@ -10,15 +10,14 @@
     "url": "git+https://github.com/rekrut/durata.git"
   },
   "scripts": {
-    "distribute": "node_modules/gulp/bin/gulp.js distribute"
+    "build": "node scripts/build.js"
   },
   "directories": {
     "test": "test"
   },
   "main": "./src/Durata.js",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "devDependencies": {
-    "gulp": "^3.9.1",
     "requirejs": "^2.3.6",
     "uglify-js": "^3.4.9"
   },

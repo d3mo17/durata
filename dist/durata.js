@@ -49,7 +49,7 @@
     this[' startValue'] = parseFloat(startValue);
     this[' targetValue'] = parseFloat(targetValue);
     this[' diffValue'] = this[' targetValue'] - this[' startValue'];
-  	
+    
     Durata.call(this, duration, easing);
   }
 
@@ -121,14 +121,14 @@
   DurataSingleValue.prototype.getProgress = 
   DurataMultipleValue.prototype.getProgress = getProgress;
 
-	/**
+  /**
    * Pauses the progress.
    * 
    * @param {*} reason 
    * 
-	 * @returns {this}
-	 */
-	DurataSingleValue.prototype.pause = 
+   * @returns {this}
+   */
+  DurataSingleValue.prototype.pause = 
   DurataMultipleValue.prototype.pause = function (reason) {
     if (!this.isPaused()) {
       this[' downTime'] = (+(new Date) - this[' startTime']);
@@ -137,14 +137,14 @@
     return this;
   };
 
-	/**
+  /**
    * Resumes the paused progress.
    * 
    * @param {*} reason 
    * 
-	 * @returns {this}
-	 */
-	DurataSingleValue.prototype.resume = 
+   * @returns {this}
+   */
+  DurataSingleValue.prototype.resume = 
   DurataMultipleValue.prototype.resume = function (reason) {
     if (this.isPaused()) {
       this[' startTime'] = (+(new Date) - this[' downTime']);
@@ -235,7 +235,7 @@
       if (Array.isArray(startFloatValue) || Array.isArray(startFloatValue)) {
         throw new RangeError('Both values - start and target value have to be of the same type!');
       }
-  		
+      
       return new DurataSingleValue(startFloatValue, targetFloatValue, duration, easing);
     }
   };

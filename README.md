@@ -199,7 +199,7 @@ For best the function should return a value in this range (0.0 to 1.0).
 If you want to distribute your changes in the 'dist'-directory, you can use gulp:
 
 ```shell
-    $ gulp distribute
+    $ npm run build
 ```
 
 ## License
