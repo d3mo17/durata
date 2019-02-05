@@ -153,7 +153,7 @@
    * @returns {this}
    */
   DurataMultipleValue.prototype.pause = function (reason) {
-    if (!this.isPaused()) {
+    if (!this.isPaused() && !this.isComplete()) {
       this[' downTime'] = (+(new Date) - this[' startTime']);
       dispatch.call(this, 'pause', reason);
     }
