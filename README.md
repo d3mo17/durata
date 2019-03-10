@@ -40,6 +40,9 @@ Demonstrates the progress of a passed float-value.
 </script>
 ```
 
+Demo: https://jsfiddle.net/7sgjv8rb/
+
+
 ##### Create a new animated value
 
 Moving a maroon colored div from a upper left position to a lower right position.
@@ -71,6 +74,9 @@ Moving a maroon colored div from a upper left position to a lower right position
     requestAnimationFrame(updateSpot.bind(spot, xPos, yPos));
 </script>
 ```
+
+Demo: https://jsfiddle.net/d0hqa18r/
+
 
 ##### Use durata with AMD and group values to move by array
 
@@ -106,6 +112,9 @@ The morphing is done by registering an event listener, that will be called when 
     });
 </script>
 ```
+
+Demo: https://jsfiddle.net/bqLtvamg/
+
 
 ##### Grab progress on update
 
@@ -152,6 +161,9 @@ The morphing is done by registering an event listener, that will be called when 
 </script>
 ```
 
+Demo https://jsfiddle.net/w8Lmsv4r/
+
+
 ##### Use durata with easing
 
 The easing-function takes a value between 0.0 and 1.0.
@@ -196,6 +208,9 @@ For best the function should return a value in this range (0.0 to 1.0).
     });
 </script>
 ```
+
+Demo: https://jsfiddle.net/cyf3v7uj/
+
 
 ### Development
 
