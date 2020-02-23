@@ -308,11 +308,11 @@
      * @throws  {RangeError}
      */
     create: function (startFloatValue, targetFloatValue, duration, easing) {
-      if (Array.isArray(startFloatValue) && Array.isArray(startFloatValue)) {
+      if (Array.isArray(startFloatValue) && Array.isArray(targetFloatValue)) {
         return new DurataMultipleValue(startFloatValue, targetFloatValue, duration, easing);
       }
 
-      if (Array.isArray(startFloatValue) || Array.isArray(startFloatValue)) {
+      if (Array.isArray(startFloatValue) || Array.isArray(targetFloatValue)) {
         throw new RangeError('Both values - start and target value have to be of the same type!');
       }
 
