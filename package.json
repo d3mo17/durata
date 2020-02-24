@@ -11,14 +11,16 @@
   },
   "scripts": {
     "document": "node_modules/jsdoc-to-markdown/bin/cli.js --no-cache --separators --private src/*.js > api.md",
-    "build": "node scripts/build.js"
+    "build": "node scripts/build.js",
+    "test": "node_modules/jest/bin/jest.js"
   },
   "directories": {
     "test": "test"
   },
   "main": "./src/Durata.js",
-  "version": "1.4.10",
+  "version": "1.4.12",
   "devDependencies": {
+    "jest": "^25.1.0",
     "jsdoc-to-markdown": "^5.0.3",
     "requirejs": "^2.3.6",
     "uglify-js": "^3.7.2"
