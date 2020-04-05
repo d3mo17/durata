@@ -3,6 +3,8 @@
 A class to move a initial float value to a target value during a defined time period.
 
 ### Features / Structure / Interface
+
+* No dependencies
 * AMD-, CommonJS and global-support
 
 ### Installation
