@@ -26,23 +26,17 @@ Demonstrates the progress of a passed float-value.
 <div id="output"></div>
 <script src="node_modules/durata/dist/durata.min.js"></script>
 <script>
-    var interval,
-        output = document.getElementById('output'),
+    var output = document.getElementById('output'),
         // Move value from 200 to 10000 during 5000 milliseconds
         progress = Durata.create(200, 10000, 5000);
 
-    // Output of value each 200 milliseconds
-    interval = setInterval(function () {
+    progress.on('update', function () {
         output.innerText = Math.ceil(progress.get());
-        // Stop output, when animation is complete
-        if (progress.isComplete()) {
-            clearInterval(interval);
-        }
-    }, 200);
+    });
 </script>
 ```
 
-Demo: https://jsfiddle.net/7sgjv8rb/
+Demo: https://jsfiddle.net/sp29t5h4/
 
 
 ##### Create a new animated value
