@@ -1,8 +1,10 @@
 
 const Durata = require('../src/Durata');
 
+global.requestAnimationFrame = cb => setImmediate(()=>cb(Date.now()));
+
 describe('Durata.js', () => {
-  it('throws an error, cause of wrong parameter passing', () => {
+    it('throws an error, cause of wrong parameter passing', () => {
 		expect(() => {
 			Durata.create(1, [3], 500);
 		}).toThrow(RangeError);
