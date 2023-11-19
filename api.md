@@ -29,6 +29,7 @@ Animating float values.
         * ["complete"](#event_complete)
         * ["pause"](#event_pause)
         * ["resume"](#event_resume)
+        * ["stop"](#event_stop)
 
 
 * * *
@@ -90,6 +91,15 @@ Will be fired when the animation continues after pause
 
 * * *
 
+<a name="event_stop"></a>
+
+### "stop"
+Will be fired when the animation is stopped
+
+**Kind**: event emitted by [<code>Durata</code>](#module_Durata)  
+
+* * *
+
 <a name="DurataSingleValue"></a>
 
 ## DurataSingleValue ℗
@@ -100,6 +110,7 @@ Will be fired when the animation continues after pause
     * [new DurataSingleValue(startValue, targetValue, duration, easing)](#new_DurataSingleValue_new)
     * [.get()](#DurataSingleValue+get) ⇒ <code>Float</code>
     * [.getProgress()](#DurataSingleValue+getProgress) ⇒ <code>Float</code>
+    * [.stop(reason)](#DurataSingleValue+stop) ⇒ <code>this</code>
     * [.pause(reason)](#DurataSingleValue+pause) ⇒ <code>this</code>
     * [.resume(reason)](#DurataSingleValue+resume) ⇒ <code>this</code>
     * [.on(type, callback)](#DurataSingleValue+on) ⇒ <code>this</code>
@@ -138,6 +149,20 @@ Returns the current calculated value
 Returns the progress quotient between 0.0 and 1.0.
 
 **Kind**: instance method of [<code>DurataSingleValue</code>](#DurataSingleValue)  
+
+* * *
+
+<a name="DurataSingleValue+stop"></a>
+
+### durataSingleValue.stop(reason) ⇒ <code>this</code>
+Stops the progress (shutdown endless loops with requestAnimationFrame-function).
+
+**Kind**: instance method of [<code>DurataSingleValue</code>](#DurataSingleValue)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| reason | <code>\*</code> | Data that should be passed to the stop-listener |
+
 
 * * *
 
@@ -215,6 +240,7 @@ Returns whether the animation is complete.
     * [.get()](#DurataMultipleValue+get) ⇒ <code>Array</code>
     * [.getProgress()](#DurataMultipleValue+getProgress) ⇒ <code>Float</code>
     * [.pause(reason)](#DurataMultipleValue+pause) ⇒ <code>this</code>
+    * [.pause(reason)](#DurataMultipleValue+pause) ⇒ <code>this</code>
     * [.resume(reason)](#DurataMultipleValue+resume) ⇒ <code>this</code>
     * [.on(type, callback)](#DurataMultipleValue+on) ⇒ <code>this</code>
     * [.isPaused()](#DurataMultipleValue+isPaused) ⇒ <code>Boolean</code>
@@ -252,6 +278,20 @@ Returns the current calculated values
 Returns the progress quotient between 0.0 and 1.0.
 
 **Kind**: instance method of [<code>DurataMultipleValue</code>](#DurataMultipleValue)  
+
+* * *
+
+<a name="DurataMultipleValue+pause"></a>
+
+### durataMultipleValue.pause(reason) ⇒ <code>this</code>
+Stops the progress (shutdown endless loops with requestAnimationFrame-function).
+
+**Kind**: instance method of [<code>DurataMultipleValue</code>](#DurataMultipleValue)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| reason | <code>\*</code> | Data that should be passed to the stop-listener |
+
 
 * * *
 

@@ -22,7 +22,7 @@
    * @module Durata
    */
 
-  var eventTypes = ['update', 'complete', 'pause', 'resume'];
+  var eventTypes = ['update', 'complete', 'pause', 'resume', 'stop'];
 
   /**
    * @private
@@ -36,10 +36,11 @@
       : function linearEasing(input) {
         return input;
       };
-    this[' duration'] = parseInt(duration) || 1000;
-    this[' downTime'] = null;
+    this[' duration']  = parseInt(duration) || 1000;
+    this[' downTime']  = null;
     this[' startTime'] = +(new Date);
-    this[' listener'] = {complete: [], pause: [], resume: []};
+    this[' listener']  = {complete: [], pause: [], resume: [], stop: []};
+    this[' stopped']   = false;
   }
 
   /**
@@ -138,6 +139,26 @@
   DurataMultipleValue.prototype.getProgress = getProgress;
 
   /**
+   * Stops the progress (shutdown endless loops with requestAnimationFrame-function).
+   *
+   * @method DurataSingleValue#stop
+   * @param {*} reason Data that should be passed to the stop-listener
+   * @returns {this}
+   */
+  DurataSingleValue.prototype.stop =
+  /**
+   * Stops the progress (shutdown endless loops with requestAnimationFrame-function).
+   *
+   * @method DurataMultipleValue#pause
+   * @param {*} reason Data that should be passed to the stop-listener
+   * @returns {this}
+   */
+  DurataMultipleValue.prototype.stop = function (reason) {
+    this[' stopped'] = true;
+    dispatch.call(this, 'stop', reason);
+  };
+
+  /**
    * Pauses the progress.
    *
    * @method DurataSingleValue#pause
@@ -213,6 +234,10 @@
    * Will be fired when the animation continues after pause
    * @event resume
    */
+  /**
+   * Will be fired when the animation is stopped
+   * @event stop
+   */
 
   /**
    * Registers an event listener of a passed type.
@@ -244,11 +269,12 @@
 
     if (type === 'update') {
       requestAnimationFrame((function update() {
-        callback.call(this) || this.isComplete() || requestAnimationFrame(update.bind(this));
+        this[' stopped'] || callback.call(this) || this.isComplete() || requestAnimationFrame(update.bind(this));
       }).bind(this));
     } else {
       if (type === 'complete' && !this[' listener'][type].length) {
         requestAnimationFrame((function completeWatch() {
+          if (this[' stopped']) return;
           this.isComplete()
             ? dispatch.call(this, 'complete')
             : requestAnimationFrame(completeWatch.bind(this));
