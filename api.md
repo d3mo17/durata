@@ -110,10 +110,11 @@ Will be fired when the animation is stopped
     * [new DurataSingleValue(startValue, targetValue, duration, easing)](#new_DurataSingleValue_new)
     * [.get()](#DurataSingleValue+get) ⇒ <code>Float</code>
     * [.getProgress()](#DurataSingleValue+getProgress) ⇒ <code>Float</code>
-    * [.stop(reason)](#DurataSingleValue+stop) ⇒ <code>this</code>
+    * [.stop(reason)](#DurataSingleValue+stop)
     * [.pause(reason)](#DurataSingleValue+pause) ⇒ <code>this</code>
     * [.resume(reason)](#DurataSingleValue+resume) ⇒ <code>this</code>
     * [.on(type, callback)](#DurataSingleValue+on) ⇒ <code>this</code>
+    * [.isStopped()](#DurataSingleValue+isStopped) ⇒ <code>Boolean</code>
     * [.isPaused()](#DurataSingleValue+isPaused) ⇒ <code>Boolean</code>
     * [.isComplete()](#DurataSingleValue+isComplete) ⇒ <code>Boolean</code>
 
@@ -154,7 +155,7 @@ Returns the progress quotient between 0.0 and 1.0.
 
 <a name="DurataSingleValue+stop"></a>
 
-### durataSingleValue.stop(reason) ⇒ <code>this</code>
+### durataSingleValue.stop(reason)
 Stops the progress (shutdown endless loops with requestAnimationFrame-function).
 
 **Kind**: instance method of [<code>DurataSingleValue</code>](#DurataSingleValue)  
@@ -211,6 +212,15 @@ for this callback.
 
 * * *
 
+<a name="DurataSingleValue+isStopped"></a>
+
+### durataSingleValue.isStopped() ⇒ <code>Boolean</code>
+Returns whether the animation is stopped.
+
+**Kind**: instance method of [<code>DurataSingleValue</code>](#DurataSingleValue)
+
+* * *
+
 <a name="DurataSingleValue+isPaused"></a>
 
 ### durataSingleValue.isPaused() ⇒ <code>Boolean</code>
@@ -239,10 +249,11 @@ Returns whether the animation is complete.
     * [new DurataMultipleValue(startValues, targetValues, duration, easing)](#new_DurataMultipleValue_new)
     * [.get()](#DurataMultipleValue+get) ⇒ <code>Array</code>
     * [.getProgress()](#DurataMultipleValue+getProgress) ⇒ <code>Float</code>
-    * [.pause(reason)](#DurataMultipleValue+pause) ⇒ <code>this</code>
+    * [.stop(reason)](#DurataMultipleValue+stop)
     * [.pause(reason)](#DurataMultipleValue+pause) ⇒ <code>this</code>
     * [.resume(reason)](#DurataMultipleValue+resume) ⇒ <code>this</code>
     * [.on(type, callback)](#DurataMultipleValue+on) ⇒ <code>this</code>
+    * [.isStopped()](#DurataMultipleValue+isStopped) ⇒ <code>Boolean</code>
     * [.isPaused()](#DurataMultipleValue+isPaused) ⇒ <code>Boolean</code>
     * [.isComplete()](#DurataMultipleValue+isComplete) ⇒ <code>Boolean</code>
 
@@ -281,9 +292,9 @@ Returns the progress quotient between 0.0 and 1.0.
 
 * * *
 
-<a name="DurataMultipleValue+pause"></a>
+<a name="DurataMultipleValue+stop"></a>
 
-### durataMultipleValue.pause(reason) ⇒ <code>this</code>
+### durataMultipleValue.stop(reason)
 Stops the progress (shutdown endless loops with requestAnimationFrame-function).
 
 **Kind**: instance method of [<code>DurataMultipleValue</code>](#DurataMultipleValue)  
@@ -337,6 +348,15 @@ for this callback.
 | type | <code>String</code> | Name of the event to listen to |
 | callback | <code>function</code> | Action that should be performed on event |
 
+
+* * *
+
+<a name="DurataMultipleValue+isStopped"></a>
+
+### durataMultipleValue.isStopped() ⇒ <code>Boolean</code>
+Returns whether the animation is stopped.
+
+**Kind**: instance method of [<code>DurataMultipleValue</code>](#DurataMultipleValue)
 
 * * *
 

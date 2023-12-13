@@ -63,9 +63,11 @@ describe('Durata.js', () => {
 			deferredUpdate.resolve('updated')
 			expect(anim.isComplete()).toBeFalsy()
 			expect(anim.isPaused()).toBeFalsy()
+			expect(anim.isStopped()).toBeFalsy()
 		})
 		expect(anim.isComplete()).toBeFalsy()
 		expect(anim.isPaused()).toBeFalsy()
+		expect(anim.isStopped()).toBeFalsy()
 		expect(deferredUpdate.promise).resolves.toEqual('updated')
 	})
 
@@ -88,6 +90,7 @@ describe('Durata.js', () => {
 		anim.on('stop', (reason) => {
 			deferredStop.resolve('stop')
 			expect(reason).toBe('Stopped to test!')
+			expect(anim.isStopped()).toBeTruthy()
 		})
 		anim.on('update', () => {
 			if (stopped) {

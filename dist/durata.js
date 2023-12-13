@@ -97,8 +97,10 @@
    * @returns {Float}
    */
   function getProgress() {
-    var passedTime = this.isPaused() ? this[' downTime'] : (+(new Date) - this[' startTime']);
-    var progress = passedTime / this[' duration'];
+    var passedTime = this.isPaused() || this.isStopped()
+      ? this[' downTime']
+      : (+(new Date) - this[' startTime']);
+    var progress   = passedTime / this[' duration'];
 
     return 1 < progress ? 1 : progress;
   }
@@ -143,18 +145,19 @@
    *
    * @method DurataSingleValue#stop
    * @param {*} reason Data that should be passed to the stop-listener
-   * @returns {this}
    */
   DurataSingleValue.prototype.stop =
   /**
    * Stops the progress (shutdown endless loops with requestAnimationFrame-function).
    *
-   * @method DurataMultipleValue#pause
+   * @method DurataMultipleValue#stop
    * @param {*} reason Data that should be passed to the stop-listener
-   * @returns {this}
    */
   DurataMultipleValue.prototype.stop = function (reason) {
-    this[' stopped'] = true;
+    if (this.isComplete()) { return; }
+    if (!this.isPaused())  { this[' downTime'] = (+(new Date) - this[' startTime']); }
+
+    this[' stopped']  = true;
     dispatch.call(this, 'stop', reason);
   };
 
@@ -269,12 +272,12 @@
 
     if (type === 'update') {
       requestAnimationFrame((function update() {
-        this[' stopped'] || callback.call(this) || this.isComplete() || requestAnimationFrame(update.bind(this));
+        this.isStopped() || callback.call(this) || this.isComplete() || requestAnimationFrame(update.bind(this));
       }).bind(this));
     } else {
       if (type === 'complete' && !this[' listener'][type].length) {
         requestAnimationFrame((function completeWatch() {
-          if (this[' stopped']) return;
+          if (this.isStopped()) return;
           this.isComplete()
             ? dispatch.call(this, 'complete')
             : requestAnimationFrame(completeWatch.bind(this));
@@ -284,6 +287,23 @@
     }
 
     return this;
+  };
+
+  /**
+   * Returns whether the animation is stopped.
+   *
+   * @method DurataSingleValue#isStopped
+   * @returns {Boolean}
+   */
+  DurataSingleValue.prototype.isStopped =
+  /**
+   * Returns whether the animation is stopped.
+   *
+   * @method DurataMultipleValue#isStopped
+   * @returns {Boolean}
+   */
+  DurataMultipleValue.prototype.isStopped = function () {
+    return this[' stopped'];
   };
 
   /**
@@ -300,7 +320,7 @@
    * @returns {Boolean}
    */
   DurataMultipleValue.prototype.isPaused = function () {
-    return this[' downTime'] !== null;
+    return !this.isStopped() && this[' downTime'] !== null;
   };
 
   /**
@@ -317,7 +337,8 @@
    * @returns {Boolean}
    */
   DurataMultipleValue.prototype.isComplete = function () {
-    return !this.isPaused() && this[' duration'] <= +(new Date) - this[' startTime'];
+    return !this.isPaused() && !this.isStopped() &&
+      this[' duration'] <= +(new Date) - this[' startTime'];
   };
 
   // Module-API
